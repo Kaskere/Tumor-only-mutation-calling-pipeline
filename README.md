@@ -14,12 +14,12 @@ cap coverage at depth       --max-depth 1000 \
 minimal mapping quality     --min-mq 30 \
 minimal base quality        --min-bq 30 \
 minimal alt base quality    --min-alt-bq 30 \
-significance                --sig 0.01
-minimal VAF                 --af-min 0.05 
-strand bias p-value         --sb-alpha 0.05 
-strand bias for indels      --sb-incl-indels 
+significance                --sig 0.01 \
+minimal VAF                 --af-min 0.05 \ 
+strand bias p-value         --sb-alpha 0.05 \ 
+strand bias for indels      --sb-incl-indels \
 
-$TODO: Homopolymer filter  for Lofreq: 'HRUN= ' in vcf  
+- TODO: Homopolymer filter  for Lofreq: 'HRUN= ' in vcf  
 
 --snvqual-thresh 77 --indelqual-thresh 61
 

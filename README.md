@@ -18,7 +18,9 @@ significance                --sig 0.01
 minimal VAF                 --af-min 0.05 
 strand bias p-value         --sb-alpha 0.05 
 strand bias for indels      --sb-incl-indels 
-# TODO: Homopolymer filter  for Lofreq: 'HRUN= ' in vcf  
+
+$TODO: Homopolymer filter  for Lofreq: 'HRUN= ' in vcf  
+
 --snvqual-thresh 77 --indelqual-thresh 61
 
 2. Apply LoFreq Panel Of Normal (PON) Blacklist

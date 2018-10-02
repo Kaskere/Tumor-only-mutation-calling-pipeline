@@ -8,10 +8,23 @@ Currently, there are 2 preprocessing steps on the bam files
 
 Includes different steps:
 1. LoFreq variant calling
-- followed by 'lofreq filter' based on NGS quality metrics
+- followed by 'lofreq filter' based on NGS quality metrics, including:
+minimal coverage            --min-cov 20 \
+cap coverage at depth       --max-depth 1000 \
+minimal mapping quality     --min-mq 30 \
+minimal base quality        --min-bq 30 \
+minimal alt base quality    --min-alt-bq 30 \
+significance                --sig 0.01
+minimal VAF                 --af-min 0.05 
+strand bias p-value         --sb-alpha 0.05 
+strand bias for indels      --sb-incl-indels 
+# TODO: Homopolymer filter  for Lofreq: 'HRUN= ' in vcf  
+--snvqual-thresh 77 --indelqual-thresh 61
+
 2. Apply LoFreq Panel Of Normal (PON) Blacklist
 - to remove all artificial/germline calls from the PON dataset
 (todo: determine what cutoff to use: filter out all calls present in at least 2 PON-cases)
+
 3. Variant Annotation
 4. Variant Discrimination
 - distinguish snp/somatic

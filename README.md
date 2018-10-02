@@ -1,4 +1,4 @@
-# LoFreq-TumorOnly
+# TumorOnly
 Workflow for SNV calling on tumor-only targeted NGS data
 
 Currently, there are 2 preprocessing steps on the bam files

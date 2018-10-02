@@ -18,7 +18,7 @@ Cosmic="/net/nfs/PAT/home/matias/data/ref/cosmic/hg19_v84_2018/CosmicCodingMuts_
 #PON_blacklist="/net/nfs/PAT/home/matias/data/blacklist/complete.PON_blacklist.vcf"
 #PON_blacklist="/net/nfs/PAT/home/matias/data/blacklist/blacklist_PON22_LoFreq.vcf"
 #PON_blacklist="/net/nfs/PAT/home/matias/data/blacklist/blacklist_PON22_LoFreq_RAW.vcf.gz"
-PON_blacklist="/net/nfs/PAT/home/matias/data/blacklist/blacklist_PON24_LoFreq_RAW.vcf"
+#PON_blacklist="/net/nfs/PAT/home/matias/data/blacklist/blacklist_PON24_LoFreq_RAW.vcf"
 #gnomAD='/net/nfs/PAT/home/tjitske/dbSNP/gnomAD/2.0.2/retagged_af-only-gnomad.raw.sites.b37.vcf.gz'
 gnomAD='/net/nfs/PAT/home/tjitske/dbSNP/gnomAD/2.0.2/retagged_gnomad.exomes.r2.0.2-AF.vcf.gz'
 
@@ -27,15 +27,15 @@ if [ ! -d "vcf/annotated" ]; then mkdir "vcf/annotated" ; fi
 if [ ! -d "vcf/annotated/stats" ]; then mkdir "vcf/annotated/stats" ; fi	
 
 # Variant Annotation  
-for i in vcf/raw/*_lofreq.vcf
+for i in vcf/not_blacklisted/*_not_blacklisted.vcf
 do
 	# in- and output files:
 	bn=`basename $i`
-	sname=${bn/_lofreq.vcf/}
+	sname=${bn/_not_blacklisted.vcf/}
 	snpEff_stats="vcf/annotated/"$sname"_stats.html"
 	vcf_tmp="vcf/annotated/"$sname"_tmp.vcf"
-	vcf_tmp2="vcf/annotated/"$sname"_tmp2.vcf"
-	vcf_tmp3="vcf/annotated/"$sname"_tmp3.vcf"
+	#vcf_tmp2="vcf/annotated/"$sname"_tmp2.vcf"
+	#vcf_tmp3="vcf/annotated/"$sname"_tmp3.vcf"
 
 	vcf_out="vcf/annotated/"$sname"_annot.vcf"
 	vcf_out_gz="vcf/annotated/"$sname"_annot.vcf.gz"
@@ -50,10 +50,9 @@ do
 
 	# | java -Xmx4g -jar $snpEff/SnpSift.jar annotate -id $Cosmic - \
 
-	### COSMIC, gnomAD and Panel of Normal annotation
+	### COSMIC and gnomAD
 	java -Xmx4g -jar $snpEff/SnpSift.jar annotate -v $Cosmic $vcf_tmp \
-	| java -Xmx4g -jar $snpEff/SnpSift.jar annotate -v -info 'gnomAD_AF' $gnomAD - \
-	| java -Xmx4g -jar $snpEff/SnpSift.jar annotate -v -noAlt -info 'PON_BLACKLIST' $PON_blacklist - > $vcf_out
+	| java -Xmx4g -jar $snpEff/SnpSift.jar annotate -v -info 'gnomAD_AF' $gnomAD - > $vcf_out
 
 
 	### Create csv files - extract fields of interest
@@ -62,7 +61,7 @@ CHROM POS "ANN[0].GENE" REF ALT DP AF \
 "ANN[0].IMPACT" "ANN[0].EFFECT" "ANN[0].HGVS_C" "ANN[0].HGVS_P" \
 ID "COMMON" "RS" "CAF" "LOF" "NMD" "MUT" \
 "CLNSIG" "ORIGIN" "SNP" "AF_EXAC" "AF_TGP" "gnomAD_AF" \
-"COSM.ID" "FATHMM" "MUT.ST" "PON_BLACKLIST"> $vcf_csv
+"COSM.ID" "FATHMM" "MUT.ST" > $vcf_csv
 
 	# remove tmp files
 	rm $vcf_tmp

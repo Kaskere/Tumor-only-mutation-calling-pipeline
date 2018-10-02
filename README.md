@@ -1,4 +1,4 @@
-# TumorOnly
+# Tumor-only mutation calling pipeline
 Workflow for SNV calling on tumor-only targeted NGS data
 
 Currently, there are 2 preprocessing steps on the bam files

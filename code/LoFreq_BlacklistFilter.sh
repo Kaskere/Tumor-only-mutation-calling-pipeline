@@ -10,7 +10,7 @@ manifest="/net/nfs/PAT/home/matias/data/manifests/BCNHL_Seq_v2/"
 
 #PON_blacklist="/net/nfs/PAT/home/matias/data/blacklist/PON_LoFreq_N24.vcf.gz"
 #BED_blacklist="/net/nfs/PAT/analysis/MPS-310/SNVanalysis_normals/LoFreq/PON_LoFreq/PON_LoFreq_N24.bed"
-alt_BED_blacklist="/net/nfs/PAT/home/matias/data/blacklist/PON_LoFreq_N24_Adjusted.bed"
+alt_BED_blacklist="/net/nfs/PAT/home/matias/data/blacklist/PON_LoFreq_N24_Adjusted_bq20.bed"
 #alt_BED_blacklist="/net/nfs/PAT/analysis/MPS-310/SNVanalysis_normals/LoFreq/PON_LoFreq/PON_LoFreq_N24_ALT.bed"
 # alt_BED_blacklist is the same as the BED_blacklist from Lofreq, except all positions are listed -1. 
 

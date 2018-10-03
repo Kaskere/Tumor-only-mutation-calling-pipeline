@@ -35,8 +35,8 @@ python $lofreqPar --pp-threads $THREADS --call-indels --verbose $i -f $ref -o $r
 -l $manifest/BCNHLv2_primary_coord.bed \
 --min-cov 20 \
 --min-mq 30 \
---min-bq 30 \
---min-alt-bq 30 \
+--min-bq 20 \
+--min-alt-bq 20 \
 --max-depth 1000 \
 --sig 0.01
 

@@ -12,8 +12,8 @@ Includes different steps:
 minimal coverage            --min-cov 20 \
 cap coverage at depth       --max-depth 1000 \
 minimal mapping quality     --min-mq 30 \
-minimal base quality        --min-bq 30 \
-minimal alt base quality    --min-alt-bq 30 \
+minimal base quality        --min-bq (30 / 20) \
+minimal alt base quality    --min-alt-bq (30 / 20) \
 significance                --sig 0.01 \
 minimal VAF                 --af-min 0.05 \ 
 strand bias p-value         --sb-alpha 0.05 \ 

@@ -5,6 +5,7 @@ module load java
 
 picard="/net/nfs/PAT/lib/picard-tools/picard-tools-1.61/"
 lofreqPar='/net/nfs/PAT/home/matias/tools/miniconda2/bin/lofreq2_call_pparallel.py'
+SnpSift="/net/nfs/PAT/home/matias/tools/snpEff_4.3/SnpSift.jar"
 THREADS=8
 ref="/net/nfs/PAT/data/ref/iGenomes/Homo_sapiens/UCSC/hg19/Sequence/BWAIndex/version0.6.0/genome.fa"
 #ref="/net/nfs/PAT/data/ref/iGenomes/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa"
@@ -24,6 +25,7 @@ bn=`basename $i`
 sname=${bn/_indelq_sorted.bam/}
 
 raw_SNVs="vcf/raw/"$sname"_lofreq_raw.vcf"
+tmp_vcf="vcf/raw/"$sname"_lofreq_tmp.vcf"
 lofreq_vcf="vcf/raw/"$sname"_lofreq.vcf"
 #echo $indelq_sorted_bam
 #echo $raw_SNVs
@@ -32,23 +34,30 @@ lofreq_vcf="vcf/raw/"$sname"_lofreq.vcf"
 # lofreq call --call-indels
 echo `date` " [$$] Calling variants (LoFreqStar) for: " $i		
 python $lofreqPar --pp-threads $THREADS --call-indels --verbose $i -f $ref -o $raw_SNVs \
--l $manifest/BCNHLv2_primary_coord.bed \
 --min-cov 20 \
 --min-mq 30 \
---min-bq 30 \
---min-alt-bq 30 \
+--min-bq 20 \
+--min-alt-bq 20 \
 --max-depth 1000 \
 --sig 0.01
 
+# -l $manifest/BCNHLv2_primary_coord.bed \ # the manifest file is not being used, since the bam files are already filtered for reads on target regions
 
 # lofreq filter 
 echo `date` " [$$] Filtering variants (LoFreqStar) for: " $i		
-lofreq filter --verbose --cov-min 10 --af-min 0.05 --sb-alpha 0.05 --sb-incl-indels -i $raw_SNVs -o $lofreq_vcf
+lofreq filter --verbose --cov-min 10 --af-min 0.05 --sb-alpha 0.05 --sb-incl-indels -i $raw_SNVs -o $tmp_vcf
+# TODO: remove --cov-min 10 ; since it is already used in lofreq call
+
+# Alternative bases / Strand Bias Filter
+# Minimal 3 alt-forward and 3 alt-reverse bases">
+java -jar $SnpSift filter -f $tmp_vcf "(DP4[2]>3) & (DP4[3]>3)" > $lofreq_vcf
+
+# remove tmp files
+rm $tmp_vcf
 
 # TODO: add homopolymer filter (if necessary)
-# rm 
-# rm $raw_SNVs
-		
+# java -jar $SnpSift filter -f $tmp_vcf "(HRUN> ...)" > $lofreq_vcf
+
 done
 
 # info from verbose filter

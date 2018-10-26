@@ -55,3 +55,14 @@ done
 #less out.bam | wc -l # (uncompressed, when option -b is not used) 9.235.023. size: 3.4G
 
 
+
+
+
+
+
+
+
+
+
+
+

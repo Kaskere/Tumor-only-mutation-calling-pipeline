@@ -54,11 +54,11 @@ do
 	# NB: for some weird reason 'na SNP' returns fields with SNP=true. So use SNP='.' instead of 'na SNP' in the filter
 	# NB: So check for each variable how to extract empty fields: with [variable]='.' OR [na variable]
 	java -jar $SnpSift filter -f $i \
-	"((na COMMON) | (COMMON=0)) & ((SNP = "false") | (SNP = '.'))" > $somatic_vcf
+	"((na COMMON) | (COMMON=0)) & ((SNP = "false") | (SNP = '.')) & ((na PON_COUNT) | (PON_COUNT<6))" > $somatic_vcf
 #	"((na COMMON) | (COMMON=0)) & ((SNP = "false") | (SNP = '.')) & ((AF_EXAC < 0.001) | (na AF_EXAC)) & ((gnomAD_AF < 0.001) | (na gnomAD_AF))" > $somatic_vcf
 
 	java -jar $SnpSift filter -f $i -n \
-	"((na COMMON) | (COMMON=0)) & ((SNP = "false") | (SNP = '.'))" > $snp_vcf
+	"((na COMMON) | (COMMON=0)) & ((SNP = "false") | (SNP = '.')) & ((na PON_COUNT) | (PON_COUNT<6))" > $snp_vcf
 #	"((na COMMON) | (COMMON=0)) & ((SNP = "false") | (SNP = '.')) & ((AF_EXAC < 0.001) | (na AF_EXAC)) & ((gnomAD_AF < 0.001) | (na gnomAD_AF))" > $snp_vcf
 
 	### 2 ### separate on impact: only for tumor samples; not for the PON control samples
@@ -76,30 +76,30 @@ do
 	### 3 ### Extract desired columns from the vcf files (see Annotation_v1 script):
 
 	java -jar $SnpSift extractFields -e "." $somatic_vcf \
-CHROM POS "ANN[0].GENE" REF ALT DP AF \
+CHROM POS "ANN[0].GENE" REF ALT DP AF "DP4[2]" "DP4[3]" "SB" "HRUN" \
 "ANN[0].IMPACT" "ANN[0].EFFECT" "ANN[0].HGVS_C" "ANN[0].HGVS_P" \
-ID "COMMON" "RS" "CAF" "LOF" "NMD" "MUT" \
+ID "COMMON" "PON_COUNT" "RS" "CAF" "LOF" "NMD" "MUT" \
 "CLNSIG" "ORIGIN" "SNP" "AF_EXAC" "AF_TGP" "gnomAD_AF" \
 "COSM.ID" "FATHMM" "MUT.ST"> $somatic_csv
 
 	java -jar $SnpSift extractFields -e "." $snp_vcf \
-CHROM POS "ANN[0].GENE" REF ALT DP AF \
+CHROM POS "ANN[0].GENE" REF ALT DP AF "DP4[2]" "DP4[3]" "SB" "HRUN" \
 "ANN[0].IMPACT" "ANN[0].EFFECT" "ANN[0].HGVS_C" "ANN[0].HGVS_P" \
-ID "COMMON" "RS" "CAF" "LOF" "NMD" "MUT" \
+ID "COMMON" "PON_COUNT" "RS" "CAF" "LOF" "NMD" "MUT" \
 "CLNSIG" "ORIGIN" "SNP" "AF_EXAC" "AF_TGP" "gnomAD_AF" \
 "COSM.ID" "FATHMM" "MUT.ST"> $snp_csv
 
 	java -jar $SnpSift extractFields -e "." $functional_somatic_vcf \
-CHROM POS "ANN[0].GENE" REF ALT DP AF \
+CHROM POS "ANN[0].GENE" REF ALT DP AF "DP4[2]" "DP4[3]" "SB" "HRUN" \
 "ANN[0].IMPACT" "ANN[0].EFFECT" "ANN[0].HGVS_C" "ANN[0].HGVS_P" \
-ID "COMMON" "RS" "CAF" "LOF" "NMD" "MUT" \
+ID "COMMON" "PON_COUNT" "RS" "CAF" "LOF" "NMD" "MUT" \
 "CLNSIG" "ORIGIN" "SNP" "AF_EXAC" "AF_TGP" "gnomAD_AF" \
 "COSM.ID" "FATHMM" "MUT.ST"> $functional_somatic_csv
 
 	java -jar $SnpSift extractFields -e "." $non_functional_somatic_vcf \
-CHROM POS "ANN[0].GENE" REF ALT DP AF \
+CHROM POS "ANN[0].GENE" REF ALT DP AF "DP4[2]" "DP4[3]" "SB" "HRUN" \
 "ANN[0].IMPACT" "ANN[0].EFFECT" "ANN[0].HGVS_C" "ANN[0].HGVS_P" \
-ID "COMMON" "RS" "CAF" "LOF" "NMD" "MUT" \
+ID "COMMON" "PON_COUNT" "RS" "CAF" "LOF" "NMD" "MUT" \
 "CLNSIG" "ORIGIN" "SNP" "AF_EXAC" "AF_TGP" "gnomAD_AF" \
 "COSM.ID" "FATHMM" "MUT.ST"> $non_functional_somatic_csv
 	
@@ -107,6 +107,16 @@ ID "COMMON" "RS" "CAF" "LOF" "NMD" "MUT" \
 	#rm $tmp_vcf $vcf_tmp2
 
 done
+
+
+i='annotated/TAM15-34226FF_S21_L004_annot.vcf'
+
+
+
+
+
+
+
 
 
 

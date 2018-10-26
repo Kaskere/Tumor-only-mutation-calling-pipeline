@@ -21,6 +21,7 @@ Cosmic="/net/nfs/PAT/home/matias/data/ref/cosmic/hg19_v84_2018/CosmicCodingMuts_
 #PON_blacklist="/net/nfs/PAT/home/matias/data/blacklist/blacklist_PON24_LoFreq_RAW.vcf"
 #gnomAD='/net/nfs/PAT/home/tjitske/dbSNP/gnomAD/2.0.2/retagged_af-only-gnomad.raw.sites.b37.vcf.gz'
 gnomAD='/net/nfs/PAT/home/tjitske/dbSNP/gnomAD/2.0.2/retagged_gnomad.exomes.r2.0.2-AF.vcf.gz'
+HMF_PON='/net/nfs/PAT/home/matias/data/blacklist/HMF_PON/PON.vcf.gz'
 
 #mkdir vcf/annotated
 if [ ! -d "vcf/annotated" ]; then mkdir "vcf/annotated" ; fi	
@@ -50,16 +51,17 @@ do
 
 	# | java -Xmx4g -jar $snpEff/SnpSift.jar annotate -id $Cosmic - \
 
-	### COSMIC and gnomAD
+	### COSMIC, gnomAD and HMF PON
 	java -Xmx4g -jar $snpEff/SnpSift.jar annotate -v $Cosmic $vcf_tmp \
-	| java -Xmx4g -jar $snpEff/SnpSift.jar annotate -v -info 'gnomAD_AF' $gnomAD - > $vcf_out
+	| java -Xmx4g -jar $snpEff/SnpSift.jar annotate -v -info 'gnomAD_AF' $gnomAD - \
+	| java -Xmx4g -jar $snpEff/SnpSift.jar annotate -v -info 'PON_COUNT' $HMF_PON - > $vcf_out
 
 
 	### Create csv files - extract fields of interest
 java -jar $snpEff/SnpSift.jar extractFields -e "." $vcf_out \
 CHROM POS "ANN[0].GENE" REF ALT DP AF \
 "ANN[0].IMPACT" "ANN[0].EFFECT" "ANN[0].HGVS_C" "ANN[0].HGVS_P" \
-ID "COMMON" "RS" "CAF" "LOF" "NMD" "MUT" \
+ID "COMMON" "PON_COUNT" "RS" "CAF" "LOF" "NMD" "MUT" \
 "CLNSIG" "ORIGIN" "SNP" "AF_EXAC" "AF_TGP" "gnomAD_AF" \
 "COSM.ID" "FATHMM" "MUT.ST" > $vcf_csv
 
@@ -99,6 +101,5 @@ done
 #bcftools view -O v TAM15.vcf.gz \
 #	| sed -e 's/\([;=[:space:]]\)AF\([,;=[:space:]]\)/\VAF\2/' > TAM15_retagged.vcf.gz
 #  | bcftools view -O z -o variants.re-tagged.vcf.gz
-
 
 
